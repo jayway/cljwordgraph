@@ -1,5 +1,6 @@
 # Lab: Word Count Histogram
 
+## What is this about?
 We will, step-by-step and using unit tests to guide us, build an application that can take a text file, parse it, and
 create an ascii histogram over the frequencies of each word in the file. Running it will look something like this:
 
@@ -15,6 +16,11 @@ create an ascii histogram over the frequencies of each word in the file. Running
     lamb       ############
     mary       #############
     the        ##############
+
+## Introduction
+Be sure to read the INTRODUCTION.md before you start the lab. In that file, there are instructions on how to find
+and install the tools required. It also contains a fairly thorough overview of Clojure as a language. If you're new
+to Clojure, you should read that.
 
 ## Create project
 The solution to the lab is in the src folder. The tests used to drive the implementation are in the test folder. You
