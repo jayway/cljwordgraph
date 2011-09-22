@@ -1,16 +1,14 @@
 # Preparations
 ## Read
-    http://dev.clojure.org/display/doc/Getting+Started+with+Leiningen
-    http://dev.clojure.org/display/doc/getting+started+with+Clooj
+* [Getting Started with Leiningen](http://dev.clojure.org/display/doc/Getting+Started+with+Leiningen)
+* [Getting Started with Clooj](http://dev.clojure.org/display/doc/getting+started+with+Clooj)
 
 ## Install
-Download and install Leiningen:
-    https://github.com/arthuredelstein/clooj/downloads
-Download Clooj (it's just an executable jar-file, keep it handy):
-    https://github.com/technomancy/leiningen
+* [Download and install Leiningen](https://github.com/technomancy/leiningen)
+* [Download Clooj (it's just an executable jar-file, keep it handy)](https://github.com/arthuredelstein/clooj/downloads)
 
 # Prologue
-Clojure is just a jar file. It's not a package with executables, compilers, and stuff that need to be installed and
+Clojure is just [a jar file](http://search.maven.org/remotecontent?filepath=org/clojure/clojure/1.2.1/clojure-1.2.1.jar). It's not a package with executables, compilers, and stuff that need to be installed and
 available in your path. This makes it a bit different to install and use, compared to say Ruby, Python, Groovy, and
 Scala.
 
@@ -31,7 +29,7 @@ At this prompt, you can directly call functions and evaluate things:
     6
 
 In practice, getting the classpath correct using nothing but the command line quickly becomes too hard. Some
-dependency management tool is required. One such tool is Leiningen:
+dependency management tool is required. One such tool is [Leiningen](https://github.com/technomancy/leiningen):
 
     % lein repl
     REPL started; server listening on localhost port 17304
@@ -60,8 +58,7 @@ The project.clj file contains the project definitions:
       :description "FIXME: write description"
       :dependencies [[org.clojure/clojure "1.2.1"]])
 
-Don't worry about all the square brackets; it's all well thought-through. Adding a dependency to, say, Spring LDAP,
-requires this change:
+It's pretty obvious how to add a dependency to, say, Spring LDAP:
 
     (defproject asdf "1.0.0-SNAPSHOT"
       :description "FIXME: write description"
@@ -116,7 +113,7 @@ that writes code, ie 'macros'. However, that's a topic for some other time.
 
 ## Symbols
 Symbols are names. Unlike most other languages, a symbol is not a reference to some storage. Symbols can be bound to
-various references using the special form 'def'. Here we bind the symbol x to a variable containing the number 42:
+various references using the special form `def`. Here we bind the symbol `x` to a variable containing the number 42:
 
     user=> (def x 42)
     #'user/x
@@ -127,7 +124,7 @@ Evaluating the symbol will resolve the binding and print the original value:
     42
 
 ## Keywords
-A keyword is like a Java enum or a Ruby symbol. It starts with a colon and is followed by its name, like :foo. A
+A keyword is like a Java enum or a Ruby symbol. It starts with a colon and is followed by its name, like `:foo`. A
 keyword always evaluates to itself:
 
     user=> :foo
@@ -135,6 +132,8 @@ keyword always evaluates to itself:
 
 Multiple keywords with the same name are not only equal, but in fact identical. Equality checks on keywords are very
 fast, which make keywords useful as keys in maps.
+
+Keywords also implement clojure.lang.IFn, which make them callable as a function. More about that later.
 
 ## Data structures
 Clojure has four compound data structures: list, vector, map, and set. They are all heterogeneous and can store any
@@ -149,7 +148,7 @@ A literal list is written as space-separated entries within parentheses:
 
 Lists are treated specially by Clojure. Unless quoted, they will be treated as function calls. The first element is
 the function that will be called, while the remaining elements will be the arguments to the function. The above list
-will fail, since 1 is not a function:
+will fail, since `1` is not a function:
 
     user=> (1 2 3)
     java.lang.Integer cannot be cast to clojure.lang.IFn
@@ -169,13 +168,13 @@ Lists are singly-linked. New elements will be added (conjoined) at the front:
     user=> (conj '(1 2 3) :x)
     (:x 1 2 3)
 
-Anything that implements the interface clojure.lang.IFn can be used as the first element in a list, ie as the function
-to be called. Here is an example of calling the function '+' with some numbers:
+Anything that implements the interface `clojure.lang.IFn` can be used as the first element in a list, ie as the function
+to be called. Here is an example of calling the function `+` with some numbers:
 
     user=> (+ 1 2 3)
     6
 
-Here we call 'count' to get the number of elements in a list:
+Here we call `count` to get the number of elements in a list:
 
     user=> (count '(1 2 3))
     3
@@ -218,8 +217,7 @@ A map evaluates to itself:
 Note that maps print with commas between the key-value pairs. Commas are whitespace and can be used or not used, as
 one pleases.
 
-Logically, a map could be thought of as a function of keys to values. In fact, you can call a map with a key, and if
-the key exists, you'll get the corresponding element. If not, you'll get nil.
+Logically, a map could be thought of as a function of keys to values. In fact, maps implement `clojure.lang.IFn` and you can call a map with a key. If the key exists, you'll get the corresponding element. If not, you'll get `nil`.
 
     user=> (def m {:a 1 :b 2 :c 3})
     user=> (m :b)
@@ -229,18 +227,16 @@ the key exists, you'll get the corresponding element. If not, you'll get nil.
 
 Maps can be conjoined to, just like lists and vectors. You conjoin a map to a map:
 
-    user=> (conj m {:b 6 :x "a string value"})
-    {:x "a string value", :a 1, :b 6, :c 3}
+    user=> (conj m {:x "a string value"})
+    {:x "a string value", :a 1, :b 2, :c 3}
 
-It's a bit awkward to have to create a map from keys and values that you want to add or update, so in practise 'assoc'
+It's a bit awkward to have to create a map from keys and values that you want to add or update, so in practise `assoc`
 is more commonly used. It takes a map and one or more key-value pairs:
 
-    user=> (assoc m :b 2 :x ["a" "vector"])
-    :x ["a" "vector"], :a 1, :b 2, :c 3}
+    user=> (assoc m [:b] 2 :x ["a" "vector"])
+    {:x ["a" "vector"], [:b] 2, :a 1, :b 2, :c 3}
 
-Above you see that other data structures can easily be used, both as values and keys.
-
-Note that m hasn't changed:
+Above you see that other data structures can easily be used, both as values and keys. Note that our original `m` hasn't changed at all in all this mocking around:
 
     user=> m
     {:a 1, :b 2, :c 3}
@@ -271,8 +267,8 @@ Functions are defined like this:
 
 The definition is in fact a list, containing a function call: defn, a symbol representing the name of the function:
 square, a vector of symbols signifying the argument list: [x], and then the function implementation. The implementation
-may be empty, whereas the function will return nil. If it consists of a single value, like 42 or :foo or [1 2 3], that
-value will be the return value. Finally, if it consists of one or more lists, these will be function calls, and the
+may be empty, whereas the function will return nil. If it consists of a single value, like `42` or `:foo` or `[1 2 3]`, 
+that value will be the return value. Finally, if it consists of one or more lists, these will be function calls, and the
 return value will be the result of the last one. This is coding in the data structures of the language itself. After
 the initial shock, it usually dawns upon the coder that it's actually quite convenient to be able to program using
 nothing but lists, vectors, maps and sets.
@@ -306,12 +302,13 @@ then split it:
     "x is 3, y is 4"
 
 Using destructuring, you can do the split right at the time of binding, by simply mirroring the expression with a
-similar structure containing symbols. A vector with pairs can be destructured using [[x y]] instead of just [p]:
+similar structure containing symbols. A vector with pairs can be destructured using `[[x y]]` instead of just `[p]`
+as argument list:
 
     user=> (defn print-point [[x y]]
              (str "x is " x ", y is " y))
 
-If you need a reference to the complete structure, you can use :as:
+If you need a reference to the complete structure, you can use `:as` to name the original:
 
     user=> (defn print-point [[x y :as p]]
              (str "x is " x ", y is " y ", p is " p))
@@ -325,31 +322,31 @@ However, destructuring a simple vector of pairs is enough for now.
 ## Namespaces
 
 Clojure supports namespaces. They group functions and definitions together. By convention, files are named as the last
-part of the namespace. For example, for the namespace asdf.core, the file is named core.clj, is placed in the folder
-src/asdf, and contains the following namespace declaration:
+part of the namespace. For example, for the namespace `asdf.core`, the file is named `core.clj`, is placed in the folder
+`src/asdf`, and contains the following namespace declaration:
 
     (ns asdf.core)
 
-The ns macro takes "directives", like :import for importing Java classes:
+The ns macro takes "directives", like `:import` for importing Java classes:
 
     (ns asdf.core
       (:import [javax.swing JFrame]))
 
-Or :use for importing functions from Clojure namespaces:
+Or `:use` for importing functions from Clojure namespaces:
 
     (ns asdf.test.core
       (:use asdf.core))
 
 ## Tests
-Tests are defined using the 'deftest' macro found in the clojure.test namespace.
+Tests are defined using the `deftest` macro found in the `clojure.test` namespace.
 
     user=> (deftest test-count
              (is (= 4
                     (count ["a" "s" "d" "f"]))
                "count returns the number of elements"))
 
-The functions under test in asdf.core, as well as the clojure.test functions and macros, are made available with the
-:use directive to the ns namespace macro:
+The functions under test in `asdf.core`, as well as the `clojure.test` functions and macros, are made available with the
+`:use` directive to the `ns` namespace macro:
 
     (ns asdf.test.core
       (:use [asdf.core])
@@ -385,6 +382,6 @@ Create a Maven pom file:
     % lein pom
 
 The pom file can be used for importing the project into Eclipse, NetBeans, or IntelliJ. Beware that once using the pom,
-you're leaving the Leiningen world. Changes in project.clj will not be picked up when using these tools.
+you're leaving the Leiningen world. Changes in `project.clj` will not be picked up when using these tools.
 
 The pom is not needed if using Clooj, or Leiningen with any plain text editor.
