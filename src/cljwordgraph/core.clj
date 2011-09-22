@@ -35,7 +35,7 @@
 
 ;; the Clojure way
 (defn run [file]
-  (->> file
+  (-> file
     slurp
     gather-words
     count-words
