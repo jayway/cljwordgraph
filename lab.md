@@ -17,7 +17,7 @@ create an ascii histogram over the frequencies of each word in the file. Running
     the        ##############
 
 ## Create project
-Create a new project:
+The solution to the lab Create a new project:
 
     % lein new cljwordgraph
     % cd cljwordgraph
@@ -52,8 +52,11 @@ available from the namespaces cljwordgraph.core and clojure.test:
       (is false "No tests have been written."))
 
 ## Make test work
-You should choose between using the psuedo-IDE Clooj or the command line and any text editor. If you choose any other
-option, like Emacs, Eclipse, NetBeans, IntelliJ, or whatever, you're on your own.
+You should choose between using the psuedo-IDE Clooj or the command line and a text editor. If you choose any other
+option, like Emacs, Eclipse, NetBeans, IntelliJ, or whatever, you're on your own. They all have Clojure support, but
+there is no chance that I can cater for them all in my instructions.
+
+See the intro.md file for instructions on downloading and getting started with Clooj and Leiningen.
 
 ### Using Clooj
 1. Open Clooj by double-clicking the downloaded clooj jar.
@@ -69,7 +72,7 @@ option, like Emacs, Eclipse, NetBeans, IntelliJ, or whatever, you're on your own
     Ran 1 tests containing 1 assertions.
     1 failures, 0 errors.
     {:type :summary, :test 1, :pass 0, :fail 1, :error 0}
-6. Find the test and change 'false' to 'true'.
+6. In the test in the source file, change 'false' to 'true'.
 7. In the menu REPL, select 'Evaluate entire file'.
 8. In the REPL window (lower right), enter (run-tests) and hit Enter. You should see:
     Testing cljwordgraph.test.core
