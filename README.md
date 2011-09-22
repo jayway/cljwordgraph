@@ -17,7 +17,10 @@ create an ascii histogram over the frequencies of each word in the file. Running
     the        ##############
 
 ## Create project
-The solution to the lab Create a new project:
+The solution to the lab is in the src folder. The tests used to drive the implementation are in the test folder. You
+should avoid peeking there. Instead follow the instructions here to incrementally build the tests and the source.
+
+Create a new project somewhere else:
 
     % lein new cljwordgraph
     % cd cljwordgraph
