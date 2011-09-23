@@ -138,7 +138,7 @@ Then make the function split the string into words.
 
 ### Useful functions
 * .split (java.lang.String#split)
-* seq
+* [seq](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/seq)
 
 Use (doc <function>) to get brief---but precise---documentation on Clojure functions:
 
@@ -182,7 +182,7 @@ Here is the test:
         "removes punctuation"))
 
 ### Useful functions
-* re-seq
+* [re-seq](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/re-seq)
 
 ### Suggested design
 Think of it backwards. Instead of splitting on certain non-word characters, try to get a sequence of matches of word
@@ -215,8 +215,8 @@ Here is the test:
 
 ### Useful functions
 * .toLowerCase (java.lang.String#toLowerCase)
-* fn
-* map
+* [fn](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/fn)
+* [map](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/map)
 
 ### Suggested design
 Write an anonymous function that performs the Java method `.toLowerCase` on its argument, then `map` this function over
@@ -249,11 +249,11 @@ Here is the test:
         "counts words into a map"))
 
 ### Useful functions
-* get
-* inc
-* assoc
-* fn
-* reduce
+* [get](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/get)
+* [inc](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/inc)
+* [assoc](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/assoc)
+* [fn](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/fn)
+* [reduce](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/reduce)
 
 ### Suggested design
 Use reduce with a function, an empty map as the start value, and coll as its collection. The function should take a
@@ -365,7 +365,7 @@ Here is the test:
         "sorts and returns a list of word/count pairs"))
 
 ### Useful functions
-* sort-by
+* [sort-by](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/sort-by)
 
 ### Suggested design
 Use `sort-by` and pass it a function that picks out the second element of the pair (now, which function could that 
@@ -398,9 +398,9 @@ Here are the tests:
         "repeats the input string n times"))
 
 ### Useful functions
-* repeat
-* str
-* apply
+* [repeat](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/repeat)
+* [str](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/str)
+* [apply](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/apply)
 
 ### Suggested design
 Use `repeat` with a count and a string, then `apply` the `str` function to the result.
@@ -430,11 +430,11 @@ Here is the test:
         "can generate a single histogram entry"))
 
 ### Useful functions
-* with-out-str
-* printf
-* str
-* first
-* second
+* [with-out-str](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/with-out-str)
+* [printf](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/printf)
+* [str](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/str)
+* [first](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/first)
+* [second](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/second)
 
 ### Suggested design
 Use `printf` to format the string. Call `printf` with a format string for a left-justified string of a certain width
@@ -463,13 +463,13 @@ Here is the test:
         "can generate a histogram from word counts"))
 
 ### Useful functions
-* let
-* max
-* apply
-* comp
-* str
-* map
-* fn
+* [let](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/let)
+* [max](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/max)
+* [apply](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/apply)
+* [comp](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/comp)
+* [str](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/str)
+* [map](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/map)
+* [fn](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/fn)
 
 ### Suggested design
 The function should first find the longest word, which would be the max width. Use 'let' to hold that value for you.
@@ -513,12 +513,12 @@ If you need to use the resulting value in another function call, you can 'let' i
 Add to `cljwordgraph.core.clj` a function called `run` that takes one argument `file`. The function should read the given file, then gather the words, count them, sort them, create a histogram, and print it.
 
 ### Useful functions
-* slurp
+* [slurp](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/slurp)
 * gather-words
 * count-words
 * sort-counted-words
 * histogram
-* println
+* [println](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/println)
 
 ### Suggested design
 #### Traditional
@@ -527,7 +527,7 @@ First do it the traditional LISP way, inside out:
     (println (histogram (sort-counted-words (count-words (gather-words (slurp file))))))
 
 #### Advanced
-Then look at the arrow macro: -> and see if that can help make it more readable:
+Then look at the arrow macro: [->](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/->) and see if that can help make it more readable:
 
     user=> (doc ->)
     ...

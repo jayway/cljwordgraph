@@ -101,24 +101,32 @@ Our directory now looks like this:
 
 Clojure is a LISP and is therefore Homoiconic. Code is written in the data structures of the language itself. There
 is no shoving a file of text through a compiler and getting something executable in return. The Clojure compiler only
-sees proper data structures, not text. It works like this: Text is read by the Reader, which converts the text into
-data structures. The data structures (lists, vectors, maps and sets) are passed to the Evaluator, which compiles them
-into byte code. The code is loaded into the JVM and executed, and the return value is Printed. This repeats in a Loop.
+sees proper data structures, not text. It works like this: Text is read by the [Reader](http://clojure.org/reader),
+which converts the text into [data structures](http://clojure.org/data_structures). The data structures (lists, vectors,
+maps and sets) are passed to the [Evaluator](http://clojure.org/evaluation), which [compiles](http://clojure.org/compilation)
+them into byte code.
+The code is loaded into the JVM and executed, and the return value is Printed. This repeats in a Loop.
 Read-Eval-Print-Loop = REPL.
 
 One important consequence of separating the Reader from the Evaluator like this, is that it enables us to write code
-that writes code, ie 'macros'. However, that's a topic for some other time.
+that writes code, ie [macros](http://clojure.org/macros). However, that's a topic for some other time.
 
 # Clojure syntax
 
+For more information regarding the langauge, see the [Clojure web site](http://clojure.org). There's a
+[Clojure cheat sheet](http://clojure.org/cheatsheet) which can be handy.
+
 ## Symbols
 Symbols are names. Unlike most other languages, a symbol is not a reference to some storage. Symbols can be bound to
-various references using the special form `def`. Here we bind the symbol `x` to a variable containing the number 42:
+various references using the [special form](http://clojure.org/special_forms) `def`. Here we bind the symbol `x` to a
+variable containing the number 42:
 
     user=> (def x 42)
     #'user/x
 
-Evaluating the symbol will resolve the binding and print the original value:
+The result of binding the symbol to a value is indeed a reference to some storage (in this case a [var](http://clojure.org/vars))
+with the name `x` and the namespace `user`. Evaluating the symbol will resolve the binding and print the underlying
+value:
 
     user=> x
     42
@@ -260,18 +268,29 @@ As with maps, sets are in fact functions of their keys. You can ask a set whethe
     user=> (s :x)
     nil
 
+## Sequences
+Clojure abstracts the data structures just mentioned into something called [sequences](http://clojure.org/sequences) or
+seqs for short. Seqs differ from iterators in that they are persistent and immutable, not stateful cursors into a
+collection. As such, they are useful for much more than "foreach": functions can consume and produce seqs, they are
+thread safe, they can share structure etc. One cool thing is that seqs also work with Strings, native Java arrays and
+objects that implement Iterable.
+
+The Clojure sequence library is a multitude of functions that work on sequences. Programming in Clojure is very much
+about mastering the sequence library.
+
 ## Functions
-Functions are defined like this:
+[Functions](http://clojure.org/functional_programming) are defined like this:
 
     user=> (defn square [x] (* x x))
 
 The definition is in fact a list, containing a function call: defn, a symbol representing the name of the function:
-square, a vector of symbols signifying the argument list: [x], and then the function implementation. The implementation
+square, a vector of symbols signifying the argument list: \[x\], and then the function implementation. The implementation
 may be empty, whereas the function will return nil. If it consists of a single value, like `42` or `:foo` or `[1 2 3]`, 
 that value will be the return value. Finally, if it consists of one or more lists, these will be function calls, and the
-return value will be the result of the last one. This is coding in the data structures of the language itself. After
-the initial shock, it usually dawns upon the coder that it's actually quite convenient to be able to program using
-nothing but lists, vectors, maps and sets.
+return value will be the result of the last one.
+
+This is coding in the data structures of the language itself. After the initial shock, it usually dawns upon the coder
+that it's actually quite convenient to be able to program using nothing but lists, vectors, maps and sets.
 
 Custom functions are called like any other function:
 
@@ -280,20 +299,21 @@ Custom functions are called like any other function:
 
 ## Useful constructs
 ### let
-Local variables are of course needed to eliminate repetition and to divide the code into parts. The let construct takes
-a vector containing pairs of the symbol to bind to and the expression to bind. The vector is followed by the code that
-should be performed within the scope of the let:
+Local variables are of course needed to eliminate repetition and to divide the code into parts. The
+[`let`](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/let)
+construct takes a vector containing pairs of the symbol to bind to and the expression to bind. The vector is followed
+by the code that should be performed within the scope of the let:
 
     user=> (let [m (max 1 2 3)]
-             (str "max is " m "))
+             (str "max is " m))
     "max is 3"
 
-The "variables" within a let are really immutable, so there is no risk of accidentally changing a local variable.
+The "variables" within a `let` are really immutable, so there is no risk of accidentally changing a local variable.
 
 ### Destructuring bind
-In all binding expressions, like argument lists or let bindings, destructuring can be used to get at the pieces of
+In all binding expressions, like argument lists or `let` bindings, destructuring can be used to get at the pieces of
 the expression, right at the time of the binding. Without destructuring, you are forced to first bind the expression,
-then split it, like below, where we first bind the pair to `p` and then split it using `first` and `second`:
+then split it. Below we first bind the pair to `p` and then split it using `first` and `second`:
 
     user=> (defn print-point [p]
              (str "x is " (first p) ", y is " (second p)))
@@ -301,8 +321,9 @@ then split it, like below, where we first bind the pair to `p` and then split it
     user=> (print-point [3 4])
     "x is 3, y is 4"
 
-Using destructuring, you can split right at the time of binding, by mirroring the expression with a similar structure
-containing symbols. A vector with pairs can be destructured using `[[x y]]` instead of just `[p]` as argument list:
+Using destructuring, you can instead split right at the time of binding, by mirroring the expression with a similar
+structure containing symbols. A vector with pairs can be destructured using `[[x y]]` instead of just `[p]` as argument
+list:
 
     user=> (defn print-point [[x y]]
              (str "x is " x ", y is " y))
