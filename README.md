@@ -18,7 +18,7 @@ create an ASCII histogram over the frequencies of each word in the file. Running
     the        ##############
 
 ## Introduction
-Be sure to read the `INTRODUCTION.md` before you start the lab. In that file, there are instructions on how to find
+Be sure to read the [`INTRODUCTION.md`](/INTRODUCTION.md/) before you start the lab. In that file, there are instructions on how to find
 and install the tools required. It also contains a fairly thorough overview of Clojure as a language. If you're new
 to Clojure, you should read that.
 
@@ -65,7 +65,7 @@ You should choose between using the psuedo-IDE Clooj or the command line and a t
 option, like Emacs, Eclipse, NetBeans, IntelliJ, or whatever, you're on your own. They all have Clojure support, but
 there is no chance that I can cater for them all in my instructions.
 
-See the `INTRODUCTION.md` file for instructions on downloading and getting started with Clooj and Leiningen.
+See the [`INTRODUCTION.md`](/INTRODUCTION.md/) file for instructions on downloading and getting started with Clooj and Leiningen.
 
 ### Using Clooj
 1. Open Clooj by double-clicking the downloaded clooj jar.
@@ -126,21 +126,28 @@ Here is the test:
             (gather-words "   mary had a\tlittle\n   lamb    "))
         "splits words on whitespace"))
 
-If in Clooj: `REPL | Evaluate entire file`
-If on command line: Run `lein test`.
+* If in Clooj: `REPL | Evaluate entire file`
+* If on command line: Run `lein test`.
 
-You should get compile error because the function doesn't exist yet.
+In both cases, you will get a compile error because the function doesn't exist yet.
 
-Add an empty function `gather-words` in `cljwordgrah.core.clj`. You should not get a compile error
-any more.
+Add an empty function `gather-words` in `src/cljwordgraph/core.clj`:
 
-Then make the function split the string into words.
+    (defn gather-words [s] )
+
+Now try to compile and test again:
+
+* If in Clooj: `REPL | Evaluate entire file`. Then enter `(run-tests)` in the REPL in the lower right, it Enter.
+* If on command line: Run `lein test`.
+
+It should compile, but the tests now fail. So, now you should implement `gather-words` to fulfil the test. Make the
+function split the string into words.
 
 ### Useful functions
 * .split (java.lang.String#split)
 * [seq](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/seq)
 
-Use (doc <function>) to get brief---but precise---documentation on Clojure functions:
+You can use `(doc <function>)` to get brief---but precise---documentation on Clojure functions:
 
     user=> (doc seq)
     -------------------------
