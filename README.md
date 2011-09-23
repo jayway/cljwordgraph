@@ -145,7 +145,11 @@ function split the string into words.
 
 ### Useful functions
 * .split (java.lang.String#split)
+* .isEmpty (java.lang.String#isEmpty)
 * [seq](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/seq)
+* [not](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/not)
+* [fn](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/fn)
+* [filter](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/filter)
 
 You can use `(doc <function>)` to get brief---but precise---documentation on Clojure functions:
 
@@ -164,13 +168,21 @@ Use (clojure.java.javadoc/javadoc <class>) to get javadoc of a Java class.
     <browser opens with javadoc for java.lang.String>
 
 ### Suggested design
-Use `.split` on the given string with a regex like `"[ \n]"`. Then call `seq` on it.
+Use `.split` on the given string with a regex like `"[ \n]"`. Then call `seq` on it. Then filter
+out any empty strings.
 
 ### Tips
 Clojure strings are Java strings, and any method on a Java string can be called on it, like:
 
     user=> (.length "apa")
     3
+
+    user=> (seq (.split "apa   kalle" " "))
+    ("apa" "" "" "kalle")
+
+    user=> (filter (fn [x] (not (.isEmpty x)))
+                   (seq (.split "apa   kalle" " ")))
+    ("apa" "kalle")
 
 ## test-gather-words (part 2)
 Add a punctuation scenario to `test-gather-words`, so that words are split on blanks and punctuation.
