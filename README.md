@@ -18,7 +18,7 @@ create an ASCII histogram over the frequencies of each word in the file. Running
     the        ##############
 
 ## Introduction
-Be sure to read the [`INTRODUCTION.md`](INTRODUCTION.md) before you start the lab. In that file, there are instructions on how to find
+Be sure to read the [`INTRODUCTION.md`](https://github.com/jayway/cljwordgraph/blob/master/INTRODUCTION.md) before you start the lab. In that file, there are instructions on how to find
 and install the tools required. It also contains a fairly thorough overview of Clojure as a language. If you're new
 to Clojure, you should read that.
 
@@ -65,7 +65,7 @@ You should choose between using the psuedo-IDE Clooj or the command line and a t
 option, like Emacs, Eclipse, NetBeans, IntelliJ, or whatever, you're on your own. They all have Clojure support, but
 there is no chance that I can cater for them all in my instructions.
 
-See the [`INTRODUCTION.md`](INTRODUCTION.md) file for instructions on downloading and getting started with Clooj and Leiningen.
+See the [`INTRODUCTION.md`](https://github.com/jayway/cljwordgraph/blob/master/INTRODUCTION.md) file for instructions on downloading and getting started with Clooj and Leiningen.
 
 ### Using Clooj
 1. Open Clooj by double-clicking the downloaded clooj jar.
