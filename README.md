@@ -2,7 +2,7 @@
 
 ## What is this about?
 We will, step-by-step and using unit tests to guide us, build an application that can take a text file, parse it, and
-create an ascii histogram over the frequencies of each word in the file. Running it will look something like this:
+create an ASCII histogram over the frequencies of each word in the file. Running it from the `cljwordgraph.core` namespace will look something like this:
 
     cljwordgraph.core=> (run "mary.txt")
     against    #
@@ -18,12 +18,12 @@ create an ascii histogram over the frequencies of each word in the file. Running
     the        ##############
 
 ## Introduction
-Be sure to read the INTRODUCTION.md before you start the lab. In that file, there are instructions on how to find
+Be sure to read the `INTRODUCTION.md` before you start the lab. In that file, there are instructions on how to find
 and install the tools required. It also contains a fairly thorough overview of Clojure as a language. If you're new
 to Clojure, you should read that.
 
 ## Create project
-The solution to the lab is in the src folder. The tests used to drive the implementation are in the test folder. You
+The solution to the lab is in the `src` folder. The tests used to drive the implementation are in the `test` folder. You
 should avoid peeking there. Instead follow the instructions here to incrementally build the tests and the source.
 
 Create a new project somewhere else:
@@ -49,8 +49,8 @@ Note how the namespace in our (otherwise empty) source code file matches its phy
     $ cat src/cljwordgraph/core.clj
     (ns cljwordgraph.core)
 
-The namespace of the test file also matches its physical location. The :use directive to ns makes all functions
-available from the namespaces cljwordgraph.core and clojure.test:
+The namespace of the test file also matches its physical location. The `:use` directive to `ns` makes all functions
+available from the namespaces `cljwordgraph.core` and `clojure.test`:
 
     $ cat test/cljwordgraph/test/core.clj
     (ns cljwordgraph.test.core
@@ -65,50 +65,55 @@ You should choose between using the psuedo-IDE Clooj or the command line and a t
 option, like Emacs, Eclipse, NetBeans, IntelliJ, or whatever, you're on your own. They all have Clojure support, but
 there is no chance that I can cater for them all in my instructions.
 
-See the intro.md file for instructions on downloading and getting started with Clooj and Leiningen.
+See the `INTRODUCTION.md` file for instructions on downloading and getting started with Clooj and Leiningen.
 
 ### Using Clooj
 1. Open Clooj by double-clicking the downloaded clooj jar.
-2. Open the cljwordgraph project.
-3. Select the cljwordgraph.test.core.clj file (not cljwordgraph.core.clj).
-4. In the menu REPL, select 'Evaluate entire file'.
-5. In the REPL window (lower right), enter (run-tests) and hit Enter. You should see:
-    Testing cljwordgraph.test.core
-    FAIL in (replace-me) (NO_SOURCE_FILE:6)
-    No tests have been written.
-    expected: false
-      actual: false
-    Ran 1 tests containing 1 assertions.
-    1 failures, 0 errors.
-    {:type :summary, :test 1, :pass 0, :fail 1, :error 0}
+2. Open your newly created `cljwordgraph` project.
+3. Select the `cljwordgraph.test.core.clj` file (not `cljwordgraph.core.clj`).
+4. In the menu `REPL`, select `Evaluate entire file`.
+5. In the REPL window (lower right), enter `(run-tests)` and hit `Enter`. You should see:
+
+		Testing cljwordgraph.test.core
+		FAIL in (replace-me) (NO_SOURCE_FILE:6)
+		No tests have been written.
+		expected: false
+		  actual: false
+		Ran 1 tests containing 1 assertions.
+		1 failures, 0 errors.
+		{:type :summary, :test 1, :pass 0, :fail 1, :error 0}
 6. In the test in the source file, change 'false' to 'true'.
-7. In the menu REPL, select 'Evaluate entire file'.
+7. In the menu `REPL`, select `Evaluate entire file`.
 8. In the REPL window (lower right), enter (run-tests) and hit Enter. You should see:
-    Testing cljwordgraph.test.core
-    Ran 1 tests containing 1 assertions.
-    0 failures, 0 errors.
+
+		Testing cljwordgraph.test.core
+		Ran 1 tests containing 1 assertions.
+		0 failures, 0 errors.
 
 ### Using command line and text editor
-1. Go to the cljwordgraph project.
+1. Go to your newly created `cljwordgraph` project.
 2. Use Leiningen to run the tests:
-    % lein test
+
+		% lein test
 3. You should get this result:
-    Testing cljwordgraph.test.core
-    FAIL in (replace-me) (core.clj:6)
-    No tests have been written.
-    expected: false
-      actual: false
-    Ran 1 tests containing 1 assertions.
-    1 failures, 0 errors.
-4. Edit the test/cljwordgraph/test/core.clj file.
-5. Find the test and change 'false' to 'true'.
+
+		Testing cljwordgraph.test.core
+		FAIL in (replace-me) (core.clj:6)
+		No tests have been written.
+		expected: false
+		  actual: false
+		Ran 1 tests containing 1 assertions.
+		1 failures, 0 errors.
+4. Edit the `test/cljwordgraph/test/core.clj` file.
+5. Find the test and change `false` to `true`.
 6. From the command line, run 'lein test' again. You should see:
-    Testing cljwordgraph.test.core
-    Ran 1 tests containing 1 assertions.
-    0 failures, 0 errors.
+
+		Testing cljwordgraph.test.core
+		Ran 1 tests containing 1 assertions.
+		0 failures, 0 errors.
 
 ## test-gather-words (part 1)
-Replace dummy test with a real test; a test for a function gather-words that takes a string s and splits it on
+Replace dummy test with a real test; a test for a function `gather-words` that takes a string `s` and splits it on
 whitespace and returns a sequence of the words as strings.
 
     user=> (gather-words "   mary had a\tlittle\n   lamb    ")
@@ -121,21 +126,21 @@ Here is the test:
             (gather-words "   mary had a\tlittle\n   lamb    "))
         "splits words on whitespace"))
 
-If in Clooj: REPL | Evaluate entire file
-If on command line: Run 'lein test'.
+If in Clooj: `REPL | Evaluate entire file`
+If on command line: Run `lein test`.
 
 You should get compile error because the function doesn't exist yet.
 
-Add an empty function gather-words in cljwordgrah.core.clj. You should not get a compile error
+Add an empty function `gather-words` in `cljwordgrah.core.clj`. You should not get a compile error
 any more.
 
 Then make the function split the string into words.
 
 ### Useful functions
-[.split]
-[seq]
+* .split (java.lang.String#split)
+* seq
 
-Use (doc <function>) to get brief (but precise) documentation on Clojure functions:
+Use (doc <function>) to get brief---but precise---documentation on Clojure functions:
 
     user=> (doc seq)
     -------------------------
@@ -152,7 +157,7 @@ Use (clojure.java.javadoc/javadoc <class>) to get javadoc of a Java class.
     <browser opens with javadoc for java.lang.String>
 
 ### Suggested design
-Use .split on the given string with a regex like "[ \n]". Then call seq on it.
+Use `.split` on the given string with a regex like `"[ \n]"`. Then call `seq` on it.
 
 ### Tips
 Clojure strings are Java strings, and any method on a Java string can be called on it, like:
@@ -161,7 +166,7 @@ Clojure strings are Java strings, and any method on a Java string can be called 
     3
 
 ## test-gather-words (part 2)
-Add punctuation scenario to test-gather-words, so that words are split on blanks and punctuation.
+Add a punctuation scenario to `test-gather-words`, so that words are split on blanks and punctuation.
 
     user=> (gather-words "., mary, had... a little; lamb!")
     ["mary" "had" "a" "little" "lamb"]
@@ -177,7 +182,7 @@ Here is the test:
         "removes punctuation"))
 
 ### Useful functions
-[re-seq]
+* re-seq
 
 ### Suggested design
 Think of it backwards. Instead of splitting on certain non-word characters, try to get a sequence of matches of word
@@ -190,7 +195,7 @@ Rather than splitting on a boundary that you don't want, you can get the matches
     ("ab" "ac")
 
 ## test-gather-words (part 3)
-Add lowercase scenario to test-gather-words, so that words are converted to lowercase.
+Add a lowercase scenario to `test-gather-words`, so that words are converted to lowercase.
 
     user=> (gather-words "., MaRy, hAd... A liTTle; lAmb!")
     ["mary" "had" "a" "little" "lamb"]
@@ -209,11 +214,12 @@ Here is the test:
         "converts words to lower case"))
 
 ### Useful functions
-[.toLowerCase]
-[map]
+* .toLowerCase (java.lang.String#toLowerCase)
+* fn
+* map
 
 ### Suggested design
-Write an anonymous function that performs the Java method .toLowerCase on its argument, then map this function over
+Write an anonymous function that performs the Java method `.toLowerCase` on its argument, then `map` this function over
 the sequence that you got from making your previous test work.
 
 ### Tips
@@ -223,13 +229,13 @@ of strings. However, Java methods are not functions, so you must wrap them in a 
     user=> (map (fn [x] (.length x)) ["apa" "kalle"])
     (3 5)
 
-Note that the short function syntax can be used if so wished. These are equivalent:
+Note that the short function syntax can be used if you like. These two function declarations are equivalent:
 
     (fn [x] (.length x))
     #(.length %)
 
 ## test-count-words
-Add a test for a function count-words that takes a collection coll and counts occurrences of elements and returns a
+Add a test for a function `count-words` that takes a collection `coll` and counts occurrences of elements and returns a
 map of element to count.
 
     user=> (count-words ["why" "mary" "why" "mary" "why"])
@@ -243,11 +249,11 @@ Here is the test:
         "counts words into a map"))
 
 ### Useful functions
-[get]
-[inc]
-[assoc]
-[fn]
-[reduce]
+* get
+* inc
+* assoc
+* fn
+* reduce
 
 ### Suggested design
 Use reduce with a function, an empty map as the start value, and coll as its collection. The function should take a
@@ -260,29 +266,29 @@ map (m) and an element from coll (x) as arguments, and it should do the followin
 ### Tips
 Clojure's reduce function also doubles as a fold function.
 
-In its reduce role, the reduce function takes a function f and a collection coll, initially calls f with the first two
-values of coll, and then subsequently calls f with the previous result from f and the next element in coll, until there
-are no more elements in coll, returning the last result of f.
+In its reduce role, the `reduce` function takes a function `f` and a collection `coll`, initially calls `f` with the 
+first two values of `coll`, and then subsequently calls `f` with the previous result from calling `f` and the next 
+element in `coll`, until there are no more elements in `coll`, returning the last result of calling `f`.
 
     user=> (reduce + [1 2 3])
     6
 
-In its fold role, however, reduce takes a function f, an initial value val, and a collection coll. It initially calls
-f with val and the first element in coll, then subsequently calls f with the previous result from f and the next
-element in coll, until there are no more elements in coll, returning the last result of f. It can be thought of like
-"folding" the collection coll around the initial value val.
+In its fold role, however, `reduce` takes a function `f`, an initial value `val`, and a collection `coll`. It initially 
+calls `f` with `val` and the first element in `coll`, then subsequently calls `f` with the previous result from calling
+`f` and the next element in `coll`, until there are no more elements in `coll`, returning the last result of `f`. It can 
+be thought of like "folding" the collection `coll` around the initial value `val`.
 
-A trivial example of a folding reduce is to give a start value to a summing operation:
+A trivial example of a folding `reduce` is to give a start value 5 to a summing operation:
 
     user=> (reduce + 5 [1 2 3])
     11
 
-However, val can be anything, for example a collection:
+However, `val` can be anything, for example a collection. Here we reduce all elements in a vector using `conj` into an empty list:
 
     user=> (reduce conj () [1 2 3])
     (3 2 1)
 
-If you pass your own function, it should expect the type of val (a map, in this case) and any element of coll:
+If you pass your own function, it should expect the type of `val` (a map, in this case) and any element of `coll`:
 
     user=> (reduce (fn [m x] (assoc m x 6)) {} ["a" "b" "b"])
     {"a" 6, "b" 6, "b" 6}
@@ -296,7 +302,7 @@ default?
 
 We get a function that counts the number of occurrences in coll!
 
-To understand how this works, start from the inside. The get function takes a map, a key and a default value:
+To understand how this works, start from the inside. The `get` function takes a map, a key and a default value:
 
     user=> (get {} "a" 0)
     0
@@ -304,51 +310,51 @@ To understand how this works, start from the inside. The get function takes a ma
     user=> (get {"a" 1} "a" 0)
     1
 
-Increasing that will increase the count of that particular word:
+Increasing that will increase the count for that particular word:
 
     user=> (inc (get {} "a" 0))
     1
 
 Associating the new count to the key in the map will store it for the next round. Remember that reduce will make the
-previous result of calling f be the first argument to f in the next round.
+previous result of calling `f` be the first argument to `f` in the next round.
 
     user=> (assoc {} "a" (inc (get {} "a" 0)))
     {"a" 1}
 
-Simulating the next round in reduce, but now with the element "b", gives:
+Simulating the next round in reduce, but now with the element `"b"`, gives:
 
     user=> (assoc {"a" 1} "b" (inc (get {"a" 1} "b" 0)))
     {"b" 1, "a" 1}
 
-And again with "b":
+And again with `"b"`:
 
     user=> (assoc {"b" 1 "a" 1} "b" (inc (get {"b" 1 "a" 1} "b" 0)))
     {"b" 2, "a" 1}
 
-Voilà: a counting function. But it can be simplified further. There is no need to call get, since a map is a function
+Voilà: a counting function. But it can be simplified further. There is no need to call `get`, since a map is a function
 of its keys:
 
     user=> (reduce (fn [m x] (assoc m x (inc (m x 0)))) {} ["a" "b" "b"])
     {"b" 2, "a" 1}
 
-The short function syntax can be used instead of fn, replacing the first argument c with %1 and x with %2:
+The short function syntax can be used instead of `fn`, replacing the first argument `m` with `%1` and `x` with
+`%2`:
 
     user=> (reduce #(assoc %1 %2 (inc (%1 %2 0))) {} ["a" "b" "b"])
     {"b" 2, "a" 1}
 
 ### Tip for the confused
-If this is totally confusing and you simply cannot get it to work, just use the function 'frequencies'. It does exactly
-this.
+If this is totally confusing and you simply cannot get it to work, just use the function `frequencies`. It does the same thing as the above code.
 
     user=> (frequencies ["a" "b" "b"])
     {"a" 1, "b" 2}
 
 ## test-sort-counted-words
-Add a test for a function sort-counted-words that takes a word count map and returns a vector of word count pairs
-sorted by count.
+Add a test for a function `sort-counted-words` that takes a word count map `words` and returns a vector of word count
+pairs sorted by count.
 
     user=> (sort-counted-words {"b" 3 "c" 2 "a" 1})
-    [["a" 1] ["c" 2] ["b" 3]]
+    (["a" 1] ["c" 2] ["b" 3])
 
 Here is the test:
 
@@ -359,21 +365,21 @@ Here is the test:
         "sorts and returns a list of word/count pairs"))
 
 ### Useful functions
-[sort-by]
+* sort-by
 
 ### Suggested design
-Use sort-by and pass it a function that picks out the second element of the pair (which one could that be?).
-The result will be a sequence sorted by the second element.
+Use `sort-by` and pass it a function that picks out the second element of the pair (now, which function could that 
+be?). The result will be a sequence sorted by the second element.
 
 ### Tips
-The seq of a map is a sequence of vectors of key-value pairs:
+The `seq` of a map is a sequence of vectors of key-value pairs:
 
     user=> (seq {:a 1 :b 2})
     ([:a 1] [:b 2])
 
 ## test-repeat-str
-Add a test for a function repeat-str that takes a string s and a number n and returns a string that repeats s for n
-times.
+Add a test for a function `repeat-str` that takes a string `s` and a number `n` and returns a string that repeats `s` 
+for `n` times.
 
     user=> (repeat-str "*" 0)
     ""
@@ -381,7 +387,7 @@ times.
     user=> (repeat-str "x" 5)
     "xxxxx"
 
-Here is the test:
+Here are the tests:
 
     (deftest test-repeat-str
       (is (= ""
@@ -392,22 +398,23 @@ Here is the test:
         "repeats the input string n times"))
 
 ### Useful functions
-[apply]
-[str]
+* repeat
+* str
+* apply
 
 ### Suggested design
-Use repeat with a count and a string, then apply the str function to the result.
+Use `repeat` with a count and a string, then `apply` the `str` function to the result.
 
 ### Tips
-If you have a collection of values that you want to send to a function that expects a varargs, you can use 'apply':
+If you have a collection of values that you want to send to a function that expects a varargs, you can use `apply`:
 
     user=> (apply str (repeat 4 "x"))
     "xxxx"
 
 ## test-histogram-entry
-Add a test for the function histogram-entry that takes a vector containing a word-count pair and a maximum width,
-returning a string with the word of the word-count pair, fitting within the width, plus an extra blank, followed by
-a number of hash characters corresponding to the count of the word-count pair.
+Add a test for the function `histogram-entry` that takes a vector containing a `word-count` pair and a maximum `width`,
+returning a string with the word of the `word-count` pair, fitting within `width`, plus an extra blank, followed by
+a number of hash characters corresponding to the count of the `word-count` pair.
 
     user=> (histogram-entry ["betty" 6] 7)
     "betty   ######"
@@ -423,23 +430,23 @@ Here is the test:
         "can generate a single histogram entry"))
 
 ### Useful functions
-[with-out-str]
-[printf]
-[str]
-[first]
-[second]
+* with-out-str
+* printf
+* str
+* first
+* second
 
 ### Suggested design
-Use printf to format the string. Call printf with a format string with a left-justified string of a certain width
+Use `printf` to format the string. Call `printf` with a format string for a left-justified string of a certain width
 (the word), a blank and another string (the hashes):
 
     "%-5.5 %s"
 
-The second argument to printf should be the first element of the word-count parameter. The third argument should be
-the result of calling repeat-str with a hash character and the second element of the word-count parameter.
+The second argument to `printf` should be the first element of the `word-count` parameter. The third argument should be
+the result of calling `repeat-str` with a hash character and the second element of the `word-count` parameter.
 
 ### Tips
-The bold can use destructuring within the argument list, instead of first and second.
+You can use destructuring within the argument list, instead of calling `first` and `second`.
 
 ## test-histogram
 Add a test for the function histogram that takes a collection of word-count pairs, word-counts, returning a
@@ -456,13 +463,13 @@ Here is the test:
         "can generate a histogram from word counts"))
 
 ### Useful functions
-[let]
-[max]
-[apply]
-[comp]
-[str]
-[map]
-[fn]
+* let
+* max
+* apply
+* comp
+* str
+* map
+* fn
 
 ### Suggested design
 The function should first find the longest word, which would be the max width. Use 'let' to hold that value for you.
@@ -503,18 +510,15 @@ If you need to use the resulting value in another function call, you can 'let' i
     nil
 
 ## Run the application
-Add to cljwordgraph.core.clj a function called run that takes one argument called 'file'. The function should:
+Add to `cljwordgraph.core.clj` a function called `run` that takes one argument `file`. The function should read the given file, then gather the words, count them, sort them, create a histogram, and print it.
 
-* slurp the given file
+### Useful functions
+* slurp
 * gather-words
 * count-words
 * sort-counted-words
 * histogram
 * println
-
-### Useful functions
-[slurp]
-[println]
 
 ### Suggested design
 #### Traditional
@@ -530,5 +534,10 @@ Then look at the arrow macro: -> and see if that can help make it more readable:
 
 Hint:
 
-    user=> (-> [:a :b :c] count inc)
-    4
+	user=> (println (inc (count [:a :b :c])))
+	"4"
+	nil
+
+    user=> (-> [:a :b :c] count inc println)
+    "4"
+	nil

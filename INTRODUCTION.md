@@ -292,8 +292,8 @@ The "variables" within a let are really immutable, so there is no risk of accide
 
 ### Destructuring bind
 In all binding expressions, like argument lists or let bindings, destructuring can be used to get at the pieces of
-the expression right at the time of the binding. Without destructuring, you are forced to first bind the expression,
-then split it:
+the expression, right at the time of the binding. Without destructuring, you are forced to first bind the expression,
+then split it, like below, where we first bind the pair to `p` and then split it using `first` and `second`:
 
     user=> (defn print-point [p]
              (str "x is " (first p) ", y is " (second p)))
@@ -301,9 +301,8 @@ then split it:
     user=> (print-point [3 4])
     "x is 3, y is 4"
 
-Using destructuring, you can do the split right at the time of binding, by simply mirroring the expression with a
-similar structure containing symbols. A vector with pairs can be destructured using `[[x y]]` instead of just `[p]`
-as argument list:
+Using destructuring, you can split right at the time of binding, by mirroring the expression with a similar structure
+containing symbols. A vector with pairs can be destructured using `[[x y]]` instead of just `[p]` as argument list:
 
     user=> (defn print-point [[x y]]
              (str "x is " x ", y is " y))
