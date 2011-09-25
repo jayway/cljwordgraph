@@ -148,6 +148,13 @@ we called `lt`. Note how I implement `ContextMapper` on the fly:
              (reify ContextMapper (mapFromContext [_ ctx] (.getStringAttribute ctx "cn"))))
     #<LinkedList [Some Person, Some Person2, Some Person3, Some Person, Some Person, Some Apple Person]>
 
+And finally, to show how easily Clojure functions can work with results from calling Java, we'll get the three first
+names from the returned Java list:
+
+    user=> (take 3 (.search lt "" "(objectclass=person)"
+                     (reify ContextMapper (mapFromContext [_ ctx] (.getStringAttribute ctx "cn")))))
+    ("Some Person" "Some Person2" "Some Person3")
+
 # REPL
 
 Clojure is a LISP and is therefore Homoiconic (from _homo_ meaning _the same_ and _icon_ meaning _representation_).
@@ -165,31 +172,65 @@ that writes code, ie [macros](http://clojure.org/macros).
 # Clojure syntax
 
 ## Numbers
-Clojure numbers are Java's Number, although Clojure integers provide automatic promotion to BigInteger when needed.
-There is no silent wrapping when they grow beyond a MAX_VALUE. Numbers can be as big as your memory allows:
+Clojure numbers use Java's boxed Number, although Clojure integers provide automatic promotion to `BigInteger` when
+needed. There is no silent wrapping when they grow beyond a `MAX_VALUE`. Numbers can be as big as your memory allows:
 
     user=> (def a Long/MAX_VALUE)
 
     user=> a
     9223372036854775807
 
-    user=> (* a a)
-    85070591730234615847396907784232501249
+    user=> (* a a a)
+    784637716923335095224261902710254454442933591094742482943
 
-Clojure also provides Ratio, which is what you get when dividing two integers that don't yield another integer:
+Clojure also provides Ratio, which is what you get when a division of integers can't be reduced to an integer:
 
     user=> (/ 22 7)
     22/7
 
-Any further operations on a Ratio will try to simplify it:
+Clojure will always try to simplify a Ratio:
 
-    user=> (- 22/7 1/7)
-    3
+    user=> (- 13/20 2/5)
+    1/4
 
-Any operation on a Ratio that involved a double will bring us back to double land:
+Any operation on a Ratio that involves a Double will bring us back to Double land:
 
     user=> (* 22/7 1.0)
     3.142857142857143
+
+## Regular Expressions
+Regular expressions can be created using Java's regex Pattern:
+
+    user=> (java.util.regex.Pattern/compile "\\w+")
+
+However, Clojure supports literal regular expressions, so you can simply write this (note that only a single backslash
+is needed):
+
+    user=> #"\w+"
+
+Even so, regular expressions can be cumbersome to work with. If you want all matches for a regex in a string, you are
+forced to first create a `Matcher` from the `Pattern`, then loop through subsequent matches using `matcher.find()`,
+retrieve each match using `matcher.group()`, and add them to a list. The Java code for this is:
+
+    Pattern pattern = Pattern.compile("\\w+");
+    Matcher matcher = pattern.matcher("some,,,random   words");
+    LinkedList hits = new LinkedList();
+    while (matcher.find()) {
+        hits.add(matcher.group());
+    }
+    return hits;
+
+Clojure can ease this pain too. The function `re-seq` returns all hits for a regex on a string:
+
+    user=> (re-seq #"\w+" "some,,,random   words")
+    ("some" "random" "words")
+
+If you only want to know whether a regex matches or not, use `re-matches`:
+
+    user=> (re-matches #"\w+" "abcd")
+    "abcd"
+    user=> (re-matches #"\w+" "abcd,")
+    nil
 
 ## Symbols
 Symbols are names. Unlike most other languages, a symbol is not a reference to some storage. However, symbols can be
@@ -216,7 +257,8 @@ keyword always evaluates to itself:
 Multiple keywords with the same name are not only equal, but in fact identical. They are the same reference. Equality
 checks on keywords are very fast, which make keywords useful as keys in maps.
 
-Keywords also implement clojure.lang.IFn, which make them callable as a function. More about that later.
+Keywords also implement `clojure.lang.IFn`, which make it possible to call them as a function. Just make a mental note
+that keywords are functions. We'll come back to it later, when discussing maps and sets.
 
 ## Data structures
 Clojure has four compound data structures: list, vector, map, and set. They are all heterogeneous and can store any
@@ -449,6 +491,17 @@ Custom functions are called like any other function:
     user=> (square 3)
     9
 
+There is a short notation for creating anonymous functions, which can be useful when passing little snippets to
+other functions. These two functions are equivalent:
+
+	#(* % %)
+	(fn [x] (* x x))
+
+The percent sign acts as an anonymous parameter. If several parameters are required, `%1`, `%2` etc can be used. These are equivalent:
+
+	#(* %1 %2)
+	(fn [x y] (* x y))
+
 ## Useful constructs
 ### let
 Local variables are of course needed to eliminate repetition and to divide the code into parts. The
@@ -492,7 +545,6 @@ If you need a reference to the complete structure, you can use `:as` to name the
     "x is 3, y is 4, p is [3 4]"
 
 Not only vectors can be destructured, but also maps or any sequences of known or unknown (or even infinite) length.
-However, destructuring a simple vector of pairs is enough for now.
 
 ## Namespaces
 
@@ -520,14 +572,15 @@ Tests are defined using the `deftest` macro found in the `clojure.test` namespac
                     (count ["a" "s" "d" "f"]))
                "count returns the number of elements"))
 
-The functions under test in `asdf.core`, as well as the `clojure.test` functions and macros, are made available with the
-`:use` directive to the `ns` namespace macro:
+Let's say we have functions that we want to test in a namespace `asdf.core`. In the test namespace, we make sure the
+functions under test in `asdf.core`, as well as the `clojure.test` functions and macros, are made available, by using
+the `:use` directive to the `ns` namespace macro:
 
     (ns asdf.test.core
       (:use [asdf.core])
       (:use [clojure.test]))
 
-Tests can be run easily from the command line using Leiningen:
+Tests can easily be run from the command line using Leiningen:
 
     % lein test
 
@@ -541,22 +594,35 @@ The result might look something like this:
     Ran 1 tests containing 1 assertions.
     1 failures, 0 errors.
 
-They can also be run from the REPL using run-tests. We first load the file with the test code, to make sure all
-definitions are evaluated:
+Tests can also be run from within the REPL. We first load the file with the test code, to make sure all definitions are
+evaluated:
 
-    user=> (load-file "/src/asdf/test/asdf/test/core.clj")
+    user=> (load-file "/tmp/asdf/test/asdf/test/core.clj")
+
+Then we import the `clojure.test` namespace, so that we can access them from the current namespace, which is `user`:
+
+	user=> (use 'clojure.test)
+
+Finally, we run the tests in the `asdf.test.core` namespace:
+	
     user=> (run-tests 'asdf.test.core)
-    Testing asdf.test.core
-    Ran 1 tests containing 1 assertions.
-    1 failures, 0 errors.
-    {:type :summary, :test 1, :pass 0, :fail 1, :error 0}
+	Testing asdf.test.core
+
+	FAIL in (replace-me) (core.clj:6)
+	No tests have been written.
+	expected: false
+	  actual: false
+
+	Ran 1 tests containing 1 assertions.
+	1 failures, 0 errors.
+	{:type :summary, :test 1, :pass 0, :fail 1, :error 0}
 
 # Misc
 Create a Maven pom file:
 
     % lein pom
 
-The pom file can be used for importing the project into Eclipse, NetBeans, or IntelliJ. Beware that once using the pom,
-you're leaving the Leiningen world. Changes in `project.clj` will not be picked up when using these tools.
+The pom file can be used for importing the project into Eclipse, NetBeans, or IntelliJ, or as a starting point when
+converting the project to use Maven. 
 
-The pom is not needed if using Leiningen with a text editor.
+Note: The pom is not needed if using Leiningen with a text editor.

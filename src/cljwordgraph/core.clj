@@ -21,7 +21,7 @@
 
 (defn histogram [word-counts]
   (let [max (apply max (map (comp count first) word-counts))]
-    (apply str 
+    (apply str
       (map (fn [w] (str (histogram-entry w max) \newline))
         word-counts))))
 

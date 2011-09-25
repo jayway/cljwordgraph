@@ -18,9 +18,11 @@ create an ASCII histogram over the frequencies of each word in the file. Running
     the        ##############
 
 ## Introduction
-Be sure to read the [`INTRODUCTION.md`](https://github.com/jayway/cljwordgraph/blob/master/INTRODUCTION.md) before you start the lab. In that file, there are instructions on how to find
+Be sure to read the [`INTRODUCTION.md`][intro] before you start the lab. In that file, there are instructions on how to find
 and install the tools required. It also contains a fairly thorough overview of Clojure as a language. If you're new
 to Clojure, you should read that.
+
+[intro]: https://github.com/jayway/cljwordgraph/blob/master/INTRODUCTION.md
 
 ## Create project
 The solution to the lab is in the `src` folder. The tests used to drive the implementation are in the `test` folder. You
@@ -63,8 +65,7 @@ available from the namespaces `cljwordgraph.core` and `clojure.test`:
 ## Make test work
 You should now choose a text editor, preferrably with Clojure support.
 
-See the [`INTRODUCTION.md`](https://github.com/jayway/cljwordgraph/blob/master/INTRODUCTION.md) file for instructions
-on downloading and getting started with Leiningen.
+See the [`INTRODUCTION.md`][intro] file for instructions on downloading and getting started with Leiningen.
 
 1. Go to your newly created `cljwordgraph` project.
 2. Use Leiningen to run the tests:
@@ -81,7 +82,7 @@ on downloading and getting started with Leiningen.
 		1 failures, 0 errors.
 4. Edit the `test/cljwordgraph/test/core.clj` file.
 5. In the test, change `false` to `true`.
-6. From the command line, run 'lein test' again. You should see:
+6. From the command line, run `lein test` again. You should see:
 
 		Testing cljwordgraph.test.core
 		Ran 1 tests containing 1 assertions.
@@ -103,20 +104,14 @@ Here is the test:
             (gather-words "   mary had a\tlittle\n   lamb    "))
         "splits words on whitespace"))
 
-* From the command line, run `lein test`.
-
-You will get a compile error because the function doesn't exist yet.
+From the command line, run `lein test`. You will get a compile error because the function doesn't exist yet.
 
 Add an empty function `gather-words` in `src/cljwordgraph/core.clj`:
 
     (defn gather-words [s] )
 
-Now try to compile and test again:
-
-* From the command line, run `lein test`.
-
-It should now compile, but the test fails. So, now you should implement `gather-words` to fulfil the test. Make the
-function split the string into words.
+From the command line, run `lein test` again. It should now compile, but the test fails. So, now you should implement 
+`gather-words` to fulfil the test.
 
 ### Useful functions
 * .split (java.lang.String#split)
@@ -126,7 +121,7 @@ function split the string into words.
 * [fn](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/fn)
 * [filter](http://clojure.github.com/clojure/clojure.core-api.html#clojure.core/filter)
 
-You can use `(doc <function>)` to get brief---but precise---documentation on Clojure functions:
+You can use `(doc <function>)` to get brief--but precise--documentation on Clojure functions:
 
     user=> (doc seq)
     -------------------------
@@ -137,13 +132,13 @@ You can use `(doc <function>)` to get brief---but precise---documentation on Clo
         Strings, native Java arrays (of reference types) and any objects
         that implement Iterable.
 
-Use (clojure.java.javadoc/javadoc <class>) to get javadoc of a Java class.
+Use `(javadoc <class>)` to get javadoc for a Java class.
 
-    user=> (clojure.java.javadoc/javadoc String)
+    user=> (javadoc String)
     <browser opens with javadoc for java.lang.String>
 
 ### Suggested design
-Use `.split` on the given string with a regex like `"[ \n]"`. Then call `seq` on it. Then filter
+Use `.split` on the given string with a regex like `"[ \n\t]"`. Then call `seq` on it. Then filter
 out any empty strings.
 
 ### Tips
@@ -223,7 +218,7 @@ of strings. However, Java methods are not functions, so you must wrap them in a 
     user=> (map (fn [x] (.length x)) ["apa" "kalle"])
     (3 5)
 
-Note that the short function syntax can be used if you like. These two function declarations are equivalent:
+The short function syntax can be used if you like. These two function declarations are equivalent:
 
     (fn [x] (.length x))
     #(.length %)
