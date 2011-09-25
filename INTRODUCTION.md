@@ -1,13 +1,14 @@
 # Getting started
-The [Clojure web site](http://clojure.org) is the canonical source for Clojure. It provides a rationale for creating
-the language. There's a
-[Clojure cheat sheet](http://clojure.org/cheatsheet) which can be handy.
+The [Clojure web site](http://clojure.org) is a goldmine of information on Clojure. It provides a
+[rationale](http://clojure.org/rationale) for creating the language. It provides a brief essay on
+[Identity and State](http://clojure.org/state), which is highly recommended reading. There's also a
+[Clojure cheat sheet](http://clojure.org/cheatsheet) which can be handy as reference.
 
 The [4Clojure](http://4clojure.com/) website provides simple "fill-in-the-blanks" exercises that provide a gentle
 introduction to the language. And if you find the first few ones dead simple, don't worry. The exercises get harder.
 
 The [labrepl](https://github.com/relevance/labrepl) is also a nice way to get started. Just clone the labrepl
-repo, run script/repl to get a REPL, and browse to localhost:8080 for some exercises. See the
+repo, run `script/repl` to get a REPL, and browse to http://localhost:8080 for some exercises. See the
 [labrepl wiki](https://github.com/relevance/labrepl/wiki) for more instructions.
 
 # Preparations
@@ -33,7 +34,7 @@ You can load Clojure source files like they are scripts:
     % java -cp lib/clojure.jar clojure.main mysource.clj
 
 It's common to incrementally grow a program by interacting with a running instance of Clojure using a REPL
-(Read-Eval-Print-Loop), which gives you a prompt that might look like this: `user=>`:
+(Read-Eval-Print-Loop), which gives you a `user=>` prompt:
 
     $ java -cp lib/clojure.jar clojure.main
     Clojure 1.2.1
@@ -52,7 +53,7 @@ it in your path, make sure it's executable, and run:
     % lein self-install
 
 That's all you need to do in order to have Leiningen working. You can use Leiningen in an ad-hoc fashion, if you just
-want try some Clojure code without having to create a project:
+want to try some Clojure code without having to create a project:
 
     % lein repl
     REPL started; server listening on localhost port 17304
@@ -122,6 +123,31 @@ Our directory now looks like this:
             └── test
                 └── core.clj
 
+When we start the REPL, Leiningen has made sure all jars are in the classpath:
+
+    asdf $ lein repl
+    REPL started; server listening on localhost port 41606
+    user=>
+
+To verify this, and to show how Clojure integrates with existing Java APIs, we import and instantiate some Spring LDAP
+classes:
+
+    user=> (import [org.springframework.ldap.core LdapTemplate ContextMapper]
+                   [org.springframework.ldap.core.support LdapContextSource])
+    user=> (def cs (doto (LdapContextSource.)
+                     (.setUrl "ldap://localhost")
+                     (.setBase "dc=jayway,dc=se")
+                     .afterPropertiesSet))
+    INFO: Property 'userDn' not set - anonymous context will be used for read-write operations
+    user=> (def lt (LdapTemplate. cs))
+
+Since I happen to have an LDAP with some data in it, I can actually perform a search using the `LdapTemplate` instance
+we called `lt`. Note how I implement `ContextMapper` on the fly:
+
+    user=> (.search lt "" "(objectclass=person)"
+             (reify ContextMapper (mapFromContext [_ ctx] (.getStringAttribute ctx "cn"))))
+    #<LinkedList [Some Person, Some Person2, Some Person3, Some Person, Some Person, Some Apple Person]>
+
 # REPL
 
 Clojure is a LISP and is therefore Homoiconic (from _homo_ meaning _the same_ and _icon_ meaning _representation_).
@@ -139,7 +165,7 @@ that writes code, ie [macros](http://clojure.org/macros).
 # Clojure syntax
 
 ## Numbers
-Clojure numbers are Java's Number. However, Clojure integers provide automatic promotion to BigInteger when needed.
+Clojure numbers are Java's Number, although Clojure integers provide automatic promotion to BigInteger when needed.
 There is no silent wrapping when they grow beyond a MAX_VALUE. Numbers can be as big as your memory allows:
 
     user=> (def a Long/MAX_VALUE)
@@ -199,7 +225,7 @@ be calculated once and are then cached. Any modifications of a data structure wi
 made highly performant using structural sharing. No copying of elements is done.
 
 ### List
-A literal list is written as space-separated entries within parentheses:
+A list is written as space-separated entries within parentheses:
 
     (1 2 3)
 
@@ -215,7 +241,7 @@ In order to get the literal list, quoting is required:
     user=> (quote (1 2 3))
     (1 2 3)
 
-or shorter:
+The `'` reader macro makes quoting shorter:
 
     user=> '(1 2 3)
     (1 2 3)
@@ -439,7 +465,10 @@ The "variables" within a `let` are really immutable, so there is no risk of acci
 ### Destructuring bind
 In all binding expressions, like argument lists or `let` bindings, destructuring can be used to get at the pieces of
 the expression, right at the time of the binding. Without destructuring, you are forced to first bind the expression,
-then split it. Below we first bind the pair to `p` and then split it using `first` and `second`:
+then split it.
+
+Here is an example without destructuring. Note that we must first bind the pair to `p` and then split it using `first`
+and `second`:
 
     user=> (defn print-point [p]
              (str "x is " (first p) ", y is " (second p)))
