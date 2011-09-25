@@ -1,23 +1,39 @@
-# Preparations
-## Read
-* [Getting Started with Leiningen](http://dev.clojure.org/display/doc/Getting+Started+with+Leiningen)
-* [Getting Started with Clooj](http://dev.clojure.org/display/doc/getting+started+with+Clooj)
+# Getting started
+The [Clojure web site](http://clojure.org) is the canonical source for Clojure. It provides a rationale for creating
+the language. There's a
+[Clojure cheat sheet](http://clojure.org/cheatsheet) which can be handy.
 
-## Install
+The [4Clojure](http://4clojure.com/) website provides simple "fill-in-the-blanks" exercises that provide a gentle
+introduction to the language. And if you find the first few ones dead simple, don't worry. The exercises get harder.
+
+The [labrepl](https://github.com/relevance/labrepl) is also a nice way to get started. Just clone the labrepl
+repo, run script/repl to get a REPL, and browse to localhost:8080 for some exercises. See the
+[labrepl wiki](https://github.com/relevance/labrepl/wiki) for more instructions.
+
+# Preparations
+## Leiningen
 * [Download and install Leiningen](https://github.com/technomancy/leiningen)
-* [Download Clooj (it's just an executable jar-file, keep it handy)](https://github.com/arthuredelstein/clooj/downloads)
+* [Getting Started with Leiningen](http://dev.clojure.org/display/doc/Getting+Started+with+Leiningen)
+
+## Choose and setup text editor
+Here are some guides for various text editors:
+
+* [Getting Started with JEdit](http://dev.clojure.org/display/doc/Getting+Started+with+JEdit)
+* [Getting Started with Textmate](http://dev.clojure.org/display/doc/Getting+Started+with+Textmate)
+* [Getting Started with Vim](http://dev.clojure.org/display/doc/Getting+Started+with+Vim)
+* [Getting Started with Emacs](http://dev.clojure.org/display/doc/Getting+Started+with+Emacs)
 
 # Prologue
-Clojure is just [a jar file](http://search.maven.org/remotecontent?filepath=org/clojure/clojure/1.2.1/clojure-1.2.1.jar). It's not a package with executables, compilers, and stuff that need to be installed and
-available in your path. This makes it a bit different to install and use, compared to say Ruby, Python, Groovy, and
-Scala.
+Clojure is just [a jar file](http://search.maven.org/remotecontent?filepath=org/clojure/clojure/1.2.1/clojure-1.2.1.jar).
+It's not a package with executables, compilers, and stuff that need to be installed and available in your path. This
+makes it a bit different to install and use, compared to say Ruby, Python, Groovy, and Scala.
 
 You can load Clojure source files like they are scripts:
 
     % java -cp lib/clojure.jar clojure.main mysource.clj
 
 It's common to incrementally grow a program by interacting with a running instance of Clojure using a REPL
-(Read-Eval-Print-Loop), which gives you a prompt that might look like this:
+(Read-Eval-Print-Loop), which gives you a prompt that might look like this: `user=>`:
 
     $ java -cp lib/clojure.jar clojure.main
     Clojure 1.2.1
@@ -28,19 +44,28 @@ At this prompt, you can directly call functions and evaluate things:
     user=> (+ 1 2 3)
     6
 
-In practice, getting the classpath correct using nothing but the command line quickly becomes too hard. Some
-dependency management tool is required. One such tool is [Leiningen](https://github.com/technomancy/leiningen):
+In practice, getting the classpath correct using nothing but the command line quickly becomes too hard. We need some
+dependency management tool. One such tool is [Leiningen](https://github.com/technomancy/leiningen).
+Download the latest stable [`lein`](https://raw.github.com/technomancy/leiningen/stable/bin/lein) script, install
+it in your path, make sure it's executable, and run:
+
+    % lein self-install
+
+That's all you need to do in order to have Leiningen working. You can use Leiningen in an ad-hoc fashion, if you just
+want try some Clojure code without having to create a project:
 
     % lein repl
     REPL started; server listening on localhost port 17304
     user=> (+ 1 2 3)
     6
 
-Usually, we need some external dependencies. In order to handle those, we must create a project. Leiningen does this
-for us, with a skeleton source and test files:
+However, often we need some external dependencies, or we want our code encapsulated in some kind of project. Leiningen
+can create a project for us, with a README file, a project file, plus skeleton source and test files:
 
     $ lein new asdf
     Created new project in: /tmp/asdf
+
+    $ tree asdf
     asdf/
     ├── README
     ├── project.clj
@@ -52,13 +77,13 @@ for us, with a skeleton source and test files:
             └── test
                 └── core.clj
 
-The project.clj file contains the project definitions:
+The `project.clj` file contains the project definitions:
 
     (defproject asdf "1.0.0-SNAPSHOT"
       :description "FIXME: write description"
       :dependencies [[org.clojure/clojure "1.2.1"]])
 
-It's pretty obvious how to add a dependency to, say, Spring LDAP:
+This is how we add a dependency to, say, Spring LDAP:
 
     (defproject asdf "1.0.0-SNAPSHOT"
       :description "FIXME: write description"
@@ -99,27 +124,51 @@ Our directory now looks like this:
 
 # REPL
 
-Clojure is a LISP and is therefore Homoiconic. Code is written in the data structures of the language itself. There
-is no shoving a file of text through a compiler and getting something executable in return. The Clojure compiler only
-sees proper data structures, not text. It works like this: Text is read by the [Reader](http://clojure.org/reader),
-which converts the text into [data structures](http://clojure.org/data_structures). The data structures (lists, vectors,
+Clojure is a LISP and is therefore Homoiconic (from _homo_ meaning _the same_ and _icon_ meaning _representation_).
+Code is written in the data structures of the language itself. There is no shoving a file of text through a compiler
+and getting something executable in return. The Clojure compiler only sees proper data structures, not text. It works
+like this: Text is read by the [Reader](http://clojure.org/reader), which converts the text into
+[data structures](http://clojure.org/data_structures). The data structures (lists, vectors,
 maps and sets) are passed to the [Evaluator](http://clojure.org/evaluation), which [compiles](http://clojure.org/compilation)
-them into byte code.
-The code is loaded into the JVM and executed, and the return value is Printed. This repeats in a Loop.
-Read-Eval-Print-Loop = REPL.
+them into byte code. The byte code is loaded into the JVM and executed, and the return value is Printed. This repeats
+in a Loop. Read-Eval-Print-Loop = REPL.
 
 One important consequence of separating the Reader from the Evaluator like this, is that it enables us to write code
-that writes code, ie [macros](http://clojure.org/macros). However, that's a topic for some other time.
+that writes code, ie [macros](http://clojure.org/macros).
 
 # Clojure syntax
 
-For more information regarding the langauge, see the [Clojure web site](http://clojure.org). There's a
-[Clojure cheat sheet](http://clojure.org/cheatsheet) which can be handy.
+## Numbers
+Clojure numbers are Java's Number. However, Clojure integers provide automatic promotion to BigInteger when needed.
+There is no silent wrapping when they grow beyond a MAX_VALUE. Numbers can be as big as your memory allows:
+
+    user=> (def a Long/MAX_VALUE)
+
+    user=> a
+    9223372036854775807
+
+    user=> (* a a)
+    85070591730234615847396907784232501249
+
+Clojure also provides Ratio, which is what you get when dividing two integers that don't yield another integer:
+
+    user=> (/ 22 7)
+    22/7
+
+Any further operations on a Ratio will try to simplify it:
+
+    user=> (- 22/7 1/7)
+    3
+
+Any operation on a Ratio that involved a double will bring us back to double land:
+
+    user=> (* 22/7 1.0)
+    3.142857142857143
 
 ## Symbols
-Symbols are names. Unlike most other languages, a symbol is not a reference to some storage. Symbols can be bound to
-various references using the [special form](http://clojure.org/special_forms) `def`. Here we bind the symbol `x` to a
-variable containing the number 42:
+Symbols are names. Unlike most other languages, a symbol is not a reference to some storage. However, symbols can be
+bound to various references using the [special form](http://clojure.org/special_forms) `def`. Here we bind the symbol
+`x` to the number 42:
 
     user=> (def x 42)
     #'user/x
@@ -138,8 +187,8 @@ keyword always evaluates to itself:
     user=> :foo
     :foo
 
-Multiple keywords with the same name are not only equal, but in fact identical. Equality checks on keywords are very
-fast, which make keywords useful as keys in maps.
+Multiple keywords with the same name are not only equal, but in fact identical. They are the same reference. Equality
+checks on keywords are very fast, which make keywords useful as keys in maps.
 
 Keywords also implement clojure.lang.IFn, which make them callable as a function. More about that later.
 
@@ -244,10 +293,24 @@ is more commonly used. It takes a map and one or more key-value pairs:
     user=> (assoc m [:b] 2 :x ["a" "vector"])
     {:x ["a" "vector"], [:b] 2, :a 1, :b 2, :c 3}
 
-Above you see that other data structures can easily be used, both as values and keys. Note that our original `m` hasn't changed at all in all this mocking around:
+Above you see that other data structures can easily be used, both as values and keys. Note that our original `m` hasn't
+changed in all this mocking around:
 
     user=> m
     {:a 1, :b 2, :c 3}
+
+#### Maps and keywords
+As we mentioned earlier, keywords are also "functionable things". You can actually call a keyword with a map as the
+argument. The keyword will look itself up in the map:
+
+    user=> (:b m)
+    2
+    user=> (:x m)
+    nil
+
+This makes for concise yet readable code. This snippet returns red if the ant has food, otherwise black.
+
+    (if (:food ant) Color/red Color/black)
 
 ### Set
 Clojure has several types of sets. A literal hash-set is written as a hash sign followed by space-separated entries
@@ -268,26 +331,89 @@ As with maps, sets are in fact functions of their keys. You can ask a set whethe
     user=> (s :x)
     nil
 
+#### Sets and keywords
+As for maps, you can call a keyword with a set as the argument. The keyword will look itself up in the set:
+
+    user=> (:b s)
+    :b
+    user=> (:x s)
+    nil
+
 ## Sequences
 Clojure abstracts the data structures just mentioned into something called [sequences](http://clojure.org/sequences) or
-seqs for short. Seqs differ from iterators in that they are persistent and immutable, not stateful cursors into a
-collection. As such, they are useful for much more than "foreach": functions can consume and produce seqs, they are
-thread safe, they can share structure etc. One cool thing is that seqs also work with Strings, native Java arrays and
-objects that implement Iterable.
+_seqs_ for short. The `seq` function is used to create a seq of something:
+
+    user=> (seq [1 2 3])
+    (1 2 3)
+
+    user=> (seq {:a 1 :b 2})
+    ([:a 1] [:b 2])
+
+Seqs support two functions:
+
+* first
+* rest
+
+The `first` function returns the first element of the sequence:
+
+
+    user=> (first (seq [1 2 3]))
+    1
+
+The `rest` function returns _a new sequence_ containing all but the first element:
+
+    user=> (rest (seq [1 2 3]))
+    (2 3)
+
+Seqs differ from iterators in that they are not stateful cursors into a collection. They are also persistent and
+immutable. While iterators are designed for use in a "foreach" scenario only, seqs are much more useful:
+
+* functions can consume and produce seqs
+* seqs are thread safe
+* seqs can share structure
+* seqs can be lazy
+
+One cool thing is that seqs also work with Strings, native Java arrays and objects that implement Iterable.
+
+    user=> (seq "abc")
+    (\a \b \c)
+
+    user=> (seq (.getBytes "abc"))
+    (97 98 99)
 
 The Clojure sequence library is a multitude of functions that work on sequences. Programming in Clojure is very much
-about mastering the sequence library.
+about mastering [the sequence library](http://clojure.org/sequences#Sequences-The%20Seq%20library).
 
 ## Functions
-[Functions](http://clojure.org/functional_programming) are defined like this:
+You can define your own [functions](http://clojure.org/functional_programming) like this:
 
     user=> (defn square [x] (* x x))
 
-The definition is in fact a list, containing a function call: defn, a symbol representing the name of the function:
-square, a vector of symbols signifying the argument list: \[x\], and then the function implementation. The implementation
-may be empty, whereas the function will return nil. If it consists of a single value, like `42` or `:foo` or `[1 2 3]`, 
-that value will be the return value. Finally, if it consists of one or more lists, these will be function calls, and the
-return value will be the result of the last one.
+If you look at the definition, you see that it is in fact a list, containing:
+
+* a function call: `defn`
+* a symbol representing the name of the function: `square`
+* a vector of symbols signifying the argument list (in this a single argument named `x`): `[x]`
+* the function implementation (in this case a multiplication of `x` and `x`): `(* x x)`
+
+A function implementation may be empty, whereas the function will return nil:
+
+    user=> (defn ignore [x])
+    user=> (ignore 3)
+    nil
+
+If the implementation consists of a single value, like `42` or `:foo` or `[1 2 3]`, that value will be the return value:
+
+    user=> (defn identity [x] x)
+    user=> (identity 3)
+    3
+
+Finally, if it consists of one or more lists, these will be function calls, and the return value will be the result of
+the last one:
+
+    user=> (defn square [x] (* x x))
+    user=> (square 3)
+    9
 
 This is coding in the data structures of the language itself. After the initial shock, it usually dawns upon the coder
 that it's actually quite convenient to be able to program using nothing but lists, vectors, maps and sets.
@@ -404,4 +530,4 @@ Create a Maven pom file:
 The pom file can be used for importing the project into Eclipse, NetBeans, or IntelliJ. Beware that once using the pom,
 you're leaving the Leiningen world. Changes in `project.clj` will not be picked up when using these tools.
 
-The pom is not needed if using Clooj, or Leiningen with any plain text editor.
+The pom is not needed if using Leiningen with a text editor.

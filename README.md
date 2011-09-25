@@ -61,36 +61,11 @@ available from the namespaces `cljwordgraph.core` and `clojure.test`:
       (is false "No tests have been written."))
 
 ## Make test work
-You should choose between using the psuedo-IDE Clooj or the command line and a text editor. If you choose any other
-option, like Emacs, Eclipse, NetBeans, IntelliJ, or whatever, you're on your own. They all have Clojure support, but
-there is no chance that I can cater for them all in my instructions.
+You should now choose a text editor, preferrably with Clojure support.
 
-See the [`INTRODUCTION.md`](https://github.com/jayway/cljwordgraph/blob/master/INTRODUCTION.md) file for instructions on downloading and getting started with Clooj and Leiningen.
+See the [`INTRODUCTION.md`](https://github.com/jayway/cljwordgraph/blob/master/INTRODUCTION.md) file for instructions
+on downloading and getting started with Leiningen.
 
-### Using Clooj
-1. Open Clooj by double-clicking the downloaded clooj jar.
-2. Open your newly created `cljwordgraph` project.
-3. Select the `cljwordgraph.test.core.clj` file (not `cljwordgraph.core.clj`).
-4. In the menu `REPL`, select `Evaluate entire file`.
-5. In the REPL window (lower right), enter `(run-tests)` and hit `Enter`. You should see:
-
-		Testing cljwordgraph.test.core
-		FAIL in (replace-me) (NO_SOURCE_FILE:6)
-		No tests have been written.
-		expected: false
-		  actual: false
-		Ran 1 tests containing 1 assertions.
-		1 failures, 0 errors.
-		{:type :summary, :test 1, :pass 0, :fail 1, :error 0}
-6. In the test in the source file, change 'false' to 'true'.
-7. In the menu `REPL`, select `Evaluate entire file`.
-8. In the REPL window (lower right), enter (run-tests) and hit Enter. You should see:
-
-		Testing cljwordgraph.test.core
-		Ran 1 tests containing 1 assertions.
-		0 failures, 0 errors.
-
-### Using command line and text editor
 1. Go to your newly created `cljwordgraph` project.
 2. Use Leiningen to run the tests:
 
@@ -105,15 +80,17 @@ See the [`INTRODUCTION.md`](https://github.com/jayway/cljwordgraph/blob/master/I
 		Ran 1 tests containing 1 assertions.
 		1 failures, 0 errors.
 4. Edit the `test/cljwordgraph/test/core.clj` file.
-5. Find the test and change `false` to `true`.
+5. In the test, change `false` to `true`.
 6. From the command line, run 'lein test' again. You should see:
 
 		Testing cljwordgraph.test.core
 		Ran 1 tests containing 1 assertions.
 		0 failures, 0 errors.
 
+Now that you have a "green bar", you're ready to start the lab.
+
 ## test-gather-words (part 1)
-Replace dummy test with a real test; a test for a function `gather-words` that takes a string `s` and splits it on
+Replace the dummy test with a real test; a test for a function `gather-words` that takes a string `s` and splits it on
 whitespace and returns a sequence of the words as strings.
 
     user=> (gather-words "   mary had a\tlittle\n   lamb    ")
@@ -126,10 +103,9 @@ Here is the test:
             (gather-words "   mary had a\tlittle\n   lamb    "))
         "splits words on whitespace"))
 
-* If in Clooj: `REPL | Evaluate entire file`
-* If on command line: Run `lein test`.
+* From the command line, run `lein test`.
 
-In both cases, you will get a compile error because the function doesn't exist yet.
+You will get a compile error because the function doesn't exist yet.
 
 Add an empty function `gather-words` in `src/cljwordgraph/core.clj`:
 
@@ -137,10 +113,9 @@ Add an empty function `gather-words` in `src/cljwordgraph/core.clj`:
 
 Now try to compile and test again:
 
-* If in Clooj: `REPL | Evaluate entire file`. Then enter `(run-tests)` in the REPL in the lower right, it Enter.
-* If on command line: Run `lein test`.
+* From the command line, run `lein test`.
 
-It should compile, but the tests now fail. So, now you should implement `gather-words` to fulfil the test. Make the
+It should now compile, but the test fails. So, now you should implement `gather-words` to fulfil the test. Make the
 function split the string into words.
 
 ### Useful functions
